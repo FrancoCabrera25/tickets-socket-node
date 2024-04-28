@@ -28,11 +28,18 @@ export class WssService {
         WssService._instance = new WssService(options);
     }
 
-    public start(){
+    public sendMenssage(type: string, payload: Object) {
+        this.wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({ type, payload }));
+            }
+        });
+    }
+    public start() {
         this.wss.on('connection', (ws: WebSocket) => {
             console.log('Client Conected');
 
-            ws.on('close', () => {})
-        })
+            ws.on('close', () => {});
+        });
     }
 }
